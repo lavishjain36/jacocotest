@@ -17,7 +17,6 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v3
 
-
     - name: Set up JDK 17
       uses: actions/setup-java@v3
       with:
@@ -46,15 +45,26 @@ jobs:
         name: jacoco-report
         path: target/site/jacoco/
 
-
-    - name: Comment on PR with coverage percentages
+    - name: Comment on PR with JaCoCo coverage summary
       if: ${{ github.event_name == 'pull_request' }}
       run: |
         REPORT=$(<badges/coverage-summary.json)
         COVERAGE=$(jq -r '.coverage' <<< "$REPORT")%
         BRANCHES=$(jq -r '.branches' <<< "$REPORT")%
+        INSTRUCTIONS=$(jq -r '.instructionCoverage' <<< "$REPORT")%
+        LINE=$(jq -r '.lineCoverage' <<< "$REPORT")%
+        COMPLEXITY=$(jq -r '.complexityCoverage' <<< "$REPORT")%
+        METHOD=$(jq -r '.methodCoverage' <<< "$REPORT")%
+        CLASS=$(jq -r '.classCoverage' <<< "$REPORT")%
         NEWLINE=$'\n'
-        BODY="## JaCoCo Test Coverage Summary Statistics${NEWLINE}* __Coverage:__ ${COVERAGE}${NEWLINE}* __Branches:__ ${BRANCHES}"
+        BODY="## JaCoCo Test Coverage Summary${NEWLINE}"
+        BODY="${BODY}* __Overall Coverage:__ ${COVERAGE}${NEWLINE}"
+        BODY="${BODY}* __Branch Coverage:__ ${BRANCHES}${NEWLINE}"
+        BODY="${BODY}* __Instruction Coverage:__ ${INSTRUCTIONS}${NEWLINE}"
+        BODY="${BODY}* __Line Coverage:__ ${LINE}${NEWLINE}"
+        BODY="${BODY}* __Complexity Coverage:__ ${COMPLEXITY}${NEWLINE}"
+        BODY="${BODY}* __Method Coverage:__ ${METHOD}${NEWLINE}"
+        BODY="${BODY}* __Class Coverage:__ ${CLASS}${NEWLINE}"
         gh pr comment ${{github.event.pull_request.number}} -b "${BODY}"
       continue-on-error: true
       env:
