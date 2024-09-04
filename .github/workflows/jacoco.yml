@@ -1,4 +1,4 @@
-name: build code
+name: build
 
 on:
   push:
@@ -86,7 +86,7 @@ jobs:
       run: |
         # Deployment commands go here, e.g., mvn deploy or any custom scripts
 
-    - name: Notify Deployment Summary (for pull requests only)
+    - name: Notify Deployment Summary (for pull requests)
       if: ${{ github.event_name == 'pull_request' }}
       run: |
         BODY="## Deployment Summary${NEWLINE}Application successfully deployed."
