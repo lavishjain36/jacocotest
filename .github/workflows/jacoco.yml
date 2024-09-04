@@ -86,9 +86,14 @@ jobs:
       run: |
         # Deployment commands go here, e.g., mvn deploy or any custom scripts
 
-    - name: Notify Deployment Summary
+    - name: Notify Deployment Summary (for pull requests only)
+      if: ${{ github.event_name == 'pull_request' }}
       run: |
         BODY="## Deployment Summary${NEWLINE}Application successfully deployed."
         gh pr comment ${{github.event.pull_request.number}} -b "${BODY}"
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Notify Deployment Summary (for non-PR events)
+      if: ${{ github.event_name != 'pull_request' }}
+      run: echo "Deployment Summary: Application successfully deployed."
