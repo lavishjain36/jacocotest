@@ -36,8 +36,13 @@ jobs:
 
     - name: Log coverage percentages to workflow output
       run: |
-        echo "coverage = ${{ steps.jacoco.outputs.coverage }}"
-        echo "branches = ${{ steps.jacoco.outputs.branches }}"
+        echo "Total Coverage: ${{ steps.jacoco.outputs.coverage }}"
+        echo "Branch Coverage: ${{ steps.jacoco.outputs.branches }}"
+        echo "Instruction Coverage: ${{ steps.jacoco.outputs.instructionCoverage }}"
+        echo "Line Coverage: ${{ steps.jacoco.outputs.lineCoverage }}"
+        echo "Complexity Coverage: ${{ steps.jacoco.outputs.complexityCoverage }}"
+        echo "Method Coverage: ${{ steps.jacoco.outputs.methodCoverage }}"
+        echo "Class Coverage: ${{ steps.jacoco.outputs.classCoverage }}"
 
     - name: Upload JaCoCo coverage report as a workflow artifact
       uses: actions/upload-artifact@v3
